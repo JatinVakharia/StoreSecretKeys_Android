@@ -45,17 +45,7 @@ class AES() {
             setKey(key)
             val cipher : Cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
             cipher.init(Cipher.DECRYPT_MODE, secretKey)
-            val decodedData = Base64.decode(encryptedContent, Base64.DEFAULT)
-            println("Decode Length : "+decodedData.size)
-            for (byte in decodedData){
-                println("Decode ByteArray : "+byte)
-            }
             val decryptedData = cipher.doFinal(Base64.decode(encryptedContent, Base64.DEFAULT))
-            println("Decrypt Length : "+decryptedData.size)
-            for (byte in decryptedData){
-                println("Decrypt ByteArray : "+byte)
-            }
-
             return String(decryptedData)
         }catch (e : Exception){
             println("Error while Decrypting : "+e.printStackTrace())

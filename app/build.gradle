@@ -23,20 +23,14 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', 'API_KEY', "\"${keysProperties['API_KEY']}\""
-            buildConfigField 'String', 'SECRET_KEY', "\"${keysProperties['SECRET_KEY']}\""
-            buildConfigField 'String', 'TOKEN', "\"${keysProperties['TOKEN']}\""
             buildConfigField 'String', 'REF_TEXT', "\"${keysProperties['REF_TEXT']}\""
             buildConfigField 'String', 'REF_TEXT_2', "\"${keysProperties['REF_TEXT_2']}\""
         }
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', 'API_KEY', "\"${keysProperties['DEBUG_API_KEY']}\""
-            buildConfigField 'String', 'SECRET_KEY', "\"${keysProperties['DEBUG_SECRET_KEY']}\""
-            buildConfigField 'String', 'TOKEN', "\"${keysProperties['DEBUG_TOKEN']}\""
-            buildConfigField 'String', 'REF_TEXT', "\"${keysProperties['REF_TEXT']}\""
-            buildConfigField 'String', 'REF_TEXT_2', "\"${keysProperties['REF_TEXT_2']}\""
+            buildConfigField 'String', 'REF_TEXT', "\"${keysProperties['DEBUG_REF_TEXT']}\""
+            buildConfigField 'String', 'REF_TEXT_2', "\"${keysProperties['DEBUG_REF_TEXT_2']}\""
         }
     }
 }

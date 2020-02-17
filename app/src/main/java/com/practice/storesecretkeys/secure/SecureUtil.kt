@@ -2,134 +2,95 @@ package com.practice.storesecretkeys.secure
 
 import android.util.Base64
 import com.practice.storesecretkeys.BuildConfig
-import java.lang.Exception
 import java.lang.StringBuilder
-
 
 class SecureUtil {
 
-    val myConst = "ejFPSmdlYUVXVEMzWT0K"
-    val myConst2 = "VjcmV0S2V5"
-
     /* ToDo : Delete this function after generating secure Data */
-    fun generateSecureDataFromAES(originalData : String) : String {
-        try {
-            val firstEncodedString = Base64.encodeToString(originalData.toByteArray(Charsets.UTF_8), Base64.DEFAULT)
-            println("firstEncodedString $firstEncodedString")
+    /* This function should only be used to generate scattered data */
+    fun generateSecretDataEncodedStringArray(data : String, myKey : String) {
 
-            val secondEncodedString = Base64.encodeToString(firstEncodedString.toByteArray(Charsets.UTF_8), Base64.DEFAULT)
-            println("secondEncodedString $secondEncodedString")
+        println("Original Data : $data")
 
-            val myKey = "ThisIsMyVerySecretKey"
+        /* Start :: This Logic is used to encrypt, encode and divide data */
+        val encryptedData = AES().encrypt(data, myKey)
+        println("Encrypted Data : $encryptedData")
 
-            val encryptedString = AES().encrypt(secondEncodedString, myKey)
-            println("encryptedString $encryptedString")
+        val encodedEncryptedData = Base64.encodeToString(encryptedData.toByteArray(Charsets.UTF_8), Base64.DEFAULT)
+        println("Encoded Encrypted String : $encodedEncryptedData")
 
-            val thirdEncodedString = Base64.encodeToString(encryptedString.toByteArray(Charsets.UTF_8), Base64.DEFAULT)
-            println("thirdEncodedString $thirdEncodedString")
+        /* Here we can apply multiple iterations of encoding to make our algo strong */
 
-            return thirdEncodedString
-
-        }catch (e : Exception){
-            println("Error while generating secure Data"+ e.printStackTrace())
-        }
-        return ""
-    }
-
-    fun getSecretFromAES(text : String) : String{
-        try {
-            val thirdDecodedString = String(Base64.decode(text, Base64.DEFAULT))
-            println("thirdDecodedString $thirdDecodedString")
-
-            val myKey = "ThisIsMyVerySecretKey"
-
-            val decryptedString = AES().decrypt(thirdDecodedString, myKey)
-            println("decryptedString $decryptedString")
-
-            val secondDecodedString = String(Base64.decode(decryptedString, Base64.DEFAULT))
-            println("secondDecodedString $secondDecodedString")
-
-            val firstDecodedString = String(Base64.decode(secondDecodedString, Base64.DEFAULT))
-            println("firstDecodedString $firstDecodedString")
-
-        }catch (e : Exception){
-            println("Error while getSecretFromAES"+ e.printStackTrace())
-
-        }
-        return ""
-    }
-
-    fun getSecretFromDES(text : String) : String{
-        return ""
-    }
-
-    /* ToDo : Delete this function after generating secure Data */
-    fun generateSecretDataEncodedStringArray(data : String) : Array<String>{
-
-        println(data)
-
-        val myKey = "VtUfrB3leCNMHI6f17DjnLxGfFlaA6gk"
-
-        val encryptedString = AES().encrypt(data, myKey)
-        println("encryptedString $encryptedString")
-
-        val thirdEncodedString = Base64.encodeToString(encryptedString.toByteArray(Charsets.UTF_8), Base64.DEFAULT)
-        println("thirdEncodedString $thirdEncodedString")
-
-        val strSize = thirdEncodedString.length
+        val strSize = encodedEncryptedData.length
         val mySize = strSize/3
 
-        val firstString = thirdEncodedString.substring(0, mySize)
-        val secondString = thirdEncodedString.substring(mySize, mySize+mySize)
-        val thirdString = thirdEncodedString.substring(mySize+mySize)
-        println(thirdEncodedString)
-        println("$firstString$secondString$thirdString")
-        println(firstString)
-        println(secondString)
-        println(thirdString)
+        /* Divide encodedEncryptedString into three parts
+         * And store these three parts in three different files
+         * Increasing parts, will make our algo more complex and strong */
+        val firstString = encodedEncryptedData.substring(0, mySize)
+        val secondString = encodedEncryptedData.substring(mySize, mySize+mySize)
+        val thirdString = encodedEncryptedData.substring(mySize+mySize)
+        println("Encoded Encrypted Data in Parts : $firstString$secondString$thirdString")
+        println("Data Part 1 : $firstString")
+        println("Data Part 2 : $secondString")
+        println("Data Part 3 : $thirdString")
+        /* End :: This Logic is used to encrypt, encode and divide data */
 
-
+        /* Start :: This Logic is used to encode and divide key */
+        println("Original Key : $myKey")
         val encodedKey = Base64.encodeToString(myKey.toByteArray(Charsets.UTF_8), Base64.DEFAULT)
-        println("encodedKey $encodedKey")
+        println("Encoded Key : $encodedKey")
 
         val strSizeKey = encodedKey.length
         val mySizeKey = strSizeKey/3
 
+        /* Divide encodedKey into three parts
+         * And store these three parts in three different files
+         * Increasing parts, will make our algo more complex and strong */
         val firstKeyString = encodedKey.substring(0, mySizeKey)
         val secondKeyString = encodedKey.substring(mySizeKey, mySizeKey+mySizeKey)
         val thirdKeyString = encodedKey.substring(mySizeKey+mySizeKey)
+        println("Encoded Encrypted Key in Parts : $firstKeyString$secondKeyString$thirdKeyString")
+        println("Key Part 1 : $firstKeyString")
+        println("Key Part 2 : $secondKeyString")
+        println("Key Part 3 : $thirdKeyString")
+        /* End :: This Logic is used to encode and divide key */
 
-        println(firstKeyString)
-        println(secondKeyString)
-        println(thirdKeyString)
+        /* Here we will manually store this data and key parts in three different files
+         * 1. Custom properties file and get those from build specific variables
+         * 2. In strings.xml
+         * 3. In Project specific constant files */
 
-        val strArr  = arrayOf(firstString ,secondString, thirdString)
-        return strArr
     }
 
-    fun generateOriginalDataFromScateredData(data: String, key: String) : String{
+    /* This function is used to gather all scattered data and bring back original data*/
+    fun generateOriginalDataFromScatteredData(data: String, key: String) : String{
 
-        var accumulatedText = StringBuilder()
-        accumulatedText.append(data)
-        accumulatedText.append(BuildConfig.REF_TEXT)
-        accumulatedText.append(myConst)
+        /* Here we will manually accumulate data and key parts from three different files
+         * 1. Custom properties file
+         * 2. In strings.xml
+         * 3. In Project specific constant files */
 
-//        val myKey = "ThisIsMyVerySecretKey"
+        var accumulatedData = StringBuilder()
+        accumulatedData.append(data)
+        accumulatedData.append(BuildConfig.REF_TEXT)
+        accumulatedData.append(ProjectConstants.myDataConst)
 
         var  accumulatedKey = StringBuilder()
         accumulatedKey.append(key)
         accumulatedKey.append(BuildConfig.REF_TEXT_2)
-        accumulatedKey.append(myConst2)
+        accumulatedKey.append(ProjectConstants.myKeyConst)
 
         val myKey = String(Base64.decode(accumulatedKey.toString(), Base64.DEFAULT))
-        println("myKey $myKey")
+        println("Original Key : $myKey")
 
-        val thirdDecodedString = String(Base64.decode(accumulatedText.toString(), Base64.DEFAULT))
-        println("thirdDecodedString $thirdDecodedString")
+        /* Here we need to decode multiple times if we have encoded multiple times */
+        val decodedData = String(Base64.decode(accumulatedData.toString(), Base64.DEFAULT))
+        println("Decoded Data :  $decodedData")
 
-        val decryptedString = AES().decrypt(thirdDecodedString, myKey)
-        println("decryptedString $decryptedString")
+        val decryptedData = AES().decrypt(decodedData, myKey)
+        println("Original Data : $decryptedData")
 
-        return decryptedString
+        return decryptedData
     }
 }

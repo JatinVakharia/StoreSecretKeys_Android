@@ -6,8 +6,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
 import com.practice.storesecretkeys.secure.SecureUtil
 import com.practice.storesecretkeys.ui.main.SectionsPagerAdapter
 
@@ -26,15 +24,15 @@ class MainActivity : AppCompatActivity() {
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
-            println("Original Data : ${BuildConfig.SECRET_KEY}")
             val util = SecureUtil()
-//            val string = util.generateSecureDataFromAES(BuildConfig.SECRET_KEY)
-//            println("string : $string")
-//            util.getSecretFromAES(string)
-//            println("Original Data : ${BuildConfig.SECRET_KEY}")
+            /* Here data can be any secret key that we want to store at client side
+             * and mykey should be the key through which we will encrypt secret key.
+             * ToDo : Below mentioned line should not be present in production code. */
+            util.generateSecretDataEncodedStringArray("d3605a1452202d42d175f5051389565ac450f4f18fad3763b28c147ac40079dc",
+                "VtUfrB3leCNMHI6f17DjnLxGfFlaA6gk")
 
-            util.generateSecretDataEncodedStringArray(">|>enJS09pL_TM<Q>}PkH9%>@@l5Tw")
-            util.generateOriginalDataFromScateredData(getString(R.string.random_text), getString(R.string.random_text_2))
+            // This function will bring you original secret key
+            util.generateOriginalDataFromScatteredData(getString(R.string.random_text), getString(R.string.random_text_2))
         }
     }
 }
